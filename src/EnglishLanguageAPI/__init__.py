@@ -42,25 +42,31 @@ if __name__ == "__main__":
                 for word in wordlist:
                     source.write(word)
 
-            
-            # Save our change to the database.
-            database.commit()
-            
-            # Remove the word from the MEMORY list.
-            wordlist.remove(word)
 
-            """ Remove the word from the INPUT list by overwriting
-            the file with the MEMORY list without the word we just wrote.
-            """
-          
-            # Clear the file by overwriting it with nothing.
-            with open("wordlist.txt", "w") as words:
-                words.write("")
-            
-            # Re-write file with list we just removed a word from.
-            for word in wordlist: 
-                with open("wordlist.txt", "a") as words:
-                    words.write(word)
+        """ Select wordlist source from certain endpoints. """
+
+        # Read from the consumable list to pick up where we left off.
+        if arguments.resume is True:
+            with open(arguments.disposable_wordlist, "r") as words:
+                wordlist = words.readlines()
+
+        # Read from the full list to avoid the overhead of writing our own list.
+        else:
+            # NOTE: Make sure we dont already have one in memory.
+            try:
+                if wordlist: pass
+
+            except NameError:
+                # NOTE: Check to see if we have our own if not in memory.
+                try:
+                    with open(arguments.wordlist, "r") as words:
+                        wordlist = words.readlines()
+                # NOTE: Request one from Github if we dont have our own.
+                except:
+                    english = EnglishVocabulary()
+                    wordlist = english.words
+
+
 
     else:
         lookup = EnglishLanguageAPI(word)
