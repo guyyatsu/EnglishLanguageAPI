@@ -1,5 +1,4 @@
 from EnglishLanguageAPI import *
-from createdatabase import *
 
 from argparse import ArgumentParser
 from sqlite3 import connect
@@ -24,35 +23,47 @@ if __name__ == "__main__":
     cursor = database.cursor()
 
     
-    # TODO: Write out a database.
     if arguments.database:
 
-        create_database(arguments.database_file)
-
+        # Read the list of words into memory.
         with open("wordlist.txt", "r") as wordlist:
-            wordlist = wordlist.readlines()
+            words = wordlist.readlines(); wordlist = words
 
-        try:
 
-            for word in wordlist:
+        """ Make the dictionary query to define a word; then
+        record both the word and its definition to a database.
+        """
+        for word in wordlist:
+
+            # Request the definition of a word;
+            lookup = EnglishLanguageAPI(word)
             
-                lookup = EnglishLanguageAPI(word)
-                cursor.execute("""
-                    INSERT OR IGNORE INTO english(
-                        word, definition
-                    ) VALUES ( ?, ? );""",
-                    (lookup.word, lookup.description)
-                )
+            # Record it to the english table;
+            cursor.execute("""
+                INSERT OR IGNORE INTO english(
+                    word, definition
+                ) VALUES ( ?, ? );""",
+                (lookup.word, lookup.description)
+            )
+            
+            # Save our change to the database.
+            database.commit()
+            
+            # Remove the word from the MEMORY list.
+            wordlist.remove(word)
 
-                database.commit()
+            """ Remove the word from the INPUT list by overwriting
+            the file with the MEMORY list without the word we just wrote.
+            """
           
-                wordlist.remove(word)
-
-        except Exception as error:
-
+            # Clear the file by overwriting it with nothing.
             with open("wordlist.txt", "w") as words:
                 words.write("")
-
+            
+            # Re-write file with list we just removed a word from.
             for word in wordlist: 
                 with open("wordlist.txt", "a") as words:
                     words.write(word)
+
+    else:
+        lookup = EnglishLanguageAPI(word)
