@@ -67,6 +67,61 @@ if __name__ == "__main__":
                     wordlist = english.words
 
 
+        """ Begin iterating over the list of words. """
 
+        try:
+            while True:
+
+                # Select a word to look up, and request its definition from the dictionary.
+                word = choice(wordlist); info(f"Begin request for {word}.")
+                request_attempt_count = 0
+         
+                while True:
+                    try:
+                        lookup = EnglishDictionary(word)
+                        break
+                    except:
+                        request_attempt_count += 1
+                        if request_attempt_count >= 3:
+                            break
+                        else:
+                            sleep(3)
+
+            
+                # Record both to the database as utf8 encoded bytes.
+                info("Writing {word} to dictionary database.")
+                cursor.execute("""
+                    INSERT OR IGNORE INTO english(
+                        word, definition
+                    ) VALUES ( ?, ? );""",
+                    ( utf8(lookup.word),
+                      utf8(lookup.description) )
+                )
+            
+                # Save our change to the database and remove the word from the MEMORY list.
+                database.commit(); wordlist.remove(word)
+
+
+        except:
+            """ Gracefully exit the program upon close. """
+            info("Exception recieved; shutting down.")
+            database.commit(); database.close()
+
+            # NOTE: Save whats left of the consumable list, if we selected that one as our source.
+            if arguments.resume is True:
+
+                info("Saving progress to disposable wordlist.")
+
+                # Clear the file by overwriting it with nothing.
+                with open(arguments.disposable_wordlist, "w") as words:
+                    words.write("")
+
+                # Re-write the disposable wordlist with what we havent done yet.
+                with open(arguments.disposable_wordlist, "a") as words:
+                    for word in wordlist:
+                        words.write(f"{word}")
+
+
+    # Basic command-line functionality; just a word and no other arguments.
     else:
         lookup = EnglishLanguageAPI(word)
