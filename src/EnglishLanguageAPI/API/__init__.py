@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import requests
+from requests import get
 import logging
 from bs4 import BeautifulSoup
 
