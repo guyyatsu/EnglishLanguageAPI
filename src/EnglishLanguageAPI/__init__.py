@@ -40,6 +40,8 @@ if __name__ == "__main__":
     if arguments.database:
         
         database = connect(arguments.database_file)
+        cursor = database.cursor()
+
         
         """ Request a source-file for local use if we need one. """
 
