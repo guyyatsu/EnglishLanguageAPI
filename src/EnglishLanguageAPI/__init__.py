@@ -3,6 +3,11 @@ from API import EnglishVocabulary
 
 from argparse import ArgumentParser
 from sqlite3 import connect
+from random import choice
+from time import sleep
+
+from logging import basicConfig, info, INFO
+
 
 utf8 = lambda string: string.encode("utf-8")
 
