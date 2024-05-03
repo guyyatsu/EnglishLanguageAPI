@@ -134,4 +134,6 @@ if __name__ == "__main__":
 
     # Basic command-line functionality; just a word and no other arguments.
     else:
-        lookup = EnglishLanguageAPI(word)
+
+        lookup = EnglishDictionary(arguments.word)
+        print(lookup.description)
