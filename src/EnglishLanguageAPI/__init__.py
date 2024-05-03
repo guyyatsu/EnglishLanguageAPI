@@ -30,27 +30,18 @@ if __name__ == "__main__":
 
     
     if arguments.database:
+        
+        """ Request a source-file for local use if we need one. """
 
-        # Read the list of words into memory.
-        with open("wordlist.txt", "r") as wordlist:
-            words = wordlist.readlines(); wordlist = words
+        # Request 50000 word list from github.
+        if arguments.build_wordlist is True:
+            english = EnglishVocabulary()
+            wordlist = english.words
 
+            with open(arguments.wordlist, "a") as source:
+                for word in wordlist:
+                    source.write(word)
 
-        """ Make the dictionary query to define a word; then
-        record both the word and its definition to a database.
-        """
-        for word in wordlist:
-
-            # Request the definition of a word;
-            lookup = EnglishLanguageAPI(word)
-            
-            # Record it to the english table;
-            cursor.execute("""
-                INSERT OR IGNORE INTO english(
-                    word, definition
-                ) VALUES ( ?, ? );""",
-                (lookup.word, lookup.description)
-            )
             
             # Save our change to the database.
             database.commit()
