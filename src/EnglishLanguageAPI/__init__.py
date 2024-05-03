@@ -11,7 +11,13 @@ if __name__ == "__main__":
 
     # Heres a long block of arguments.
     arguments.add_argument("-W", "--word")
-    arguments.add_argument("-Db", "--database", action="store_true")
+
+    arguments.add_argument("-Bw", "--build-wordlist", action="store_true")
+    arguments.add_argument("-Dw", "--disposable-wordlist", default="/home/library/disposable-wordlist.txt")
+    arguments.add_argument("-Wl", "--wordlist", default="/home/library/50000-wordlist.txt")
+    arguments.add_argument("-R", "--resume", action="store_true")
+    arguments.add_argument("-Db", "--database", action="store_true", default=False)
+    arguments.add_argument("-Lf", "--logfile", default="/home/logs/EnglishLanguageAPI.log")
     arguments.add_argument(
         "-Df", "--database-file",
         default="/home/library/dictionary.db"
