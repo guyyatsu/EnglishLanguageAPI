@@ -1,19 +1,32 @@
 #!/usr/bin/env python
 from requests import get
-import logging
+
 from bs4 import BeautifulSoup
+
+from logging import info
+from logging import getLogger
+
+# Call the logger if one is set.
+try: getLogger(__name__)
+except: pass
+
 
 class EnglishVocabulary:
     def __init__(self):
+        """
+        Request a clean list of over 50,000 words from github,
+        courtesy of Guyyatsu.Technomancer.
+        """
+
+        # Make the request and clean up the formatting as we read it into memory.
+        info("Requesting 50,000 word list from Github.")
         wordlist = [ word.decode() for word in get( f"https://raw.githubusercontent.com/"
                                                     f"guyyatsu/EnglishLanguageAPI/master/"
                                                     f"src/EnglishLanguageAPI/wordlist.txt" ).content\
                                                                                             .split( "\n".encode() )\
-                     if word.decode() != "" ]
-        self.wordlist = wordlist
+                     if word.decode() != "" ]; info("Finished Request.")
 
-        
-
+        self.words = wordlist
 
 
 class EnglishDictionary:
@@ -30,27 +43,27 @@ class EnglishDictionary:
         against the thesaurus unless explicitly told to check the dictionary.
         """
 
-        logging.getLogger(__name__)
-        base_url = "https://dictionary.com/browse"
 
+        # Set dictionary.com  api url.
+        base_url = "https://dictionary.com/browse"
 
         # TODO: Handle multiple words.
         self.word = word.split()[0]\
                         .lower()
 
-        request_url = f"{base_url}/{self.word.lower()}"
-
-        logging.info(f"Requesting definition for: {self.word}")
+        # Request the `dictionary.com` webpage for our word.
+        info(f"Requesting definition for: {self.word}")
         page = BeautifulSoup(
-            get(request_url).content,
+            get( f"{base_url}/{self.word.lower()}" ).content,
             "html.parser"
         )
 
-
+        # Scrape the raw html for the single tag containing what we're looking for.
         description = \
             page.find("meta", {"name": "description"})\
                 .get("content")
 
+        # Clean up the text for presentability and make globally accessible.
         description = description.replace(f"{self.word.title()} definition: ", "")
         description = description.replace(" See more.", "")
         description = description.replace("..", ".")
