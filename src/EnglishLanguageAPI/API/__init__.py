@@ -3,6 +3,18 @@ from requests import get
 import logging
 from bs4 import BeautifulSoup
 
+class EnglishVocabulary:
+    def __init__(self):
+        wordlist = [ word.decode() for word in get( f"https://raw.githubusercontent.com/"
+                                                    f"guyyatsu/EnglishLanguageAPI/master/"
+                                                    f"src/EnglishLanguageAPI/wordlist.txt" ).content\
+                                                                                            .split( "\n".encode() )\
+                     if word.decode() != "" ]
+        self.wordlist = wordlist
+
+        
+
+
 
 class EnglishDictionary:
     """
