@@ -1,4 +1,5 @@
-from .API import *
+from API import EnglishDictionary
+from API import EnglishVocabulary
 
 from argparse import ArgumentParser
 from sqlite3 import connect
@@ -28,7 +29,10 @@ if __name__ == "__main__":
     basicConfig(filename=arguments.logfile, level=INFO)
 
 
+    # Database functionality; for documenting every word.
     if arguments.database:
+        
+        database = connect(arguments.database_file)
         
         """ Request a source-file for local use if we need one. """
 
