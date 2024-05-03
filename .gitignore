@@ -1,0 +1,11 @@
+*/**/__pycache__/
+*/**/*.pyc
+
+*/**/*.egg
+
+bin/
+lib/
+lib64
+lib64/
+*/**/*.cfg
+*/**/.*.bak

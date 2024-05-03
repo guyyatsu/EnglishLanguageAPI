@@ -1,4 +1,4 @@
-from EnglishLanguageAPI import *
+from .API import *
 
 from argparse import ArgumentParser
 from sqlite3 import connect

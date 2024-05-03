@@ -4,7 +4,7 @@ import logging
 from bs4 import BeautifulSoup
 
 
-class EnglishLanguageAPI:
+class EnglishDictionary:
     """
     The EnglishLanguageAPI class accepts a single word and searches
     the dictionary for a matching description.
