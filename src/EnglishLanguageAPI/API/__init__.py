@@ -42,8 +42,7 @@ class EnglishDictionary:
 
         logging.info(f"Requesting definition for: {self.word}")
         page = BeautifulSoup(
-            requests.get(request_url)\
-                    .content,
+            get(request_url).content,
             "html.parser"
         )
 
