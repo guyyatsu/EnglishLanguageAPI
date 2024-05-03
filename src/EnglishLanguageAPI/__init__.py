@@ -4,6 +4,8 @@ from API import EnglishVocabulary
 from argparse import ArgumentParser
 from sqlite3 import connect
 
+utf8 = lambda string: string.encode("utf-8")
+
 
 if __name__ == "__main__":
 
