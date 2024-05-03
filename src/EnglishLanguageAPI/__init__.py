@@ -25,10 +25,9 @@ if __name__ == "__main__":
 
     arguments = arguments.parse_args()
 
-    database = connect(arguments.database_file)
-    cursor = database.cursor()
+    basicConfig(filename=arguments.logfile, level=INFO)
 
-    
+
     if arguments.database:
         
         """ Request a source-file for local use if we need one. """
